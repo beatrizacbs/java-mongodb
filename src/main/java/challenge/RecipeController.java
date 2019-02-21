@@ -1,55 +1,71 @@
 package challenge;
 
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/recipe")
 public class RecipeController {
 
 	@Autowired
 	private RecipeService service;
 
-	public Recipe save() {
-		return service.save(null);
+	@PostMapping("/")
+	public Recipe save(Recipe recipe) {
+		return service.save(service.save(recipe));
 	}
 
-	public void update() {
-		service.update(null, null);
+	@PutMapping("/{id}")
+	public void update(@PathVariable String id, @RequestBody Recipe recipe) {
+		service.update(id, recipe);
 	}
 
-	public void delete() {
-		service.delete(null);
+	@DeleteMapping("/{id}")
+	public void delete(@PathVariable String id) {
+		service.delete(id);
 	}
 
-	public Recipe get() {
-		return service.get(null);
+	@GetMapping("/{id}")
+	public Recipe get(@PathVariable String id) {
+		return service.get(id);
 	}
 
-	public List<Recipe> listByIngredient() {
-		return service.listByIngredient(null);
+	@GetMapping("/ingredient")
+	public List<Recipe> listByIngredient(List<String> ingredients) {
+
+		return service.listByIngredient(ingredients.toString());
 	}
 
+	@GetMapping("/search")
 	public List<Recipe> search() {
 		return service.search(null);
 	}
 
-	public void like() {
-		service.like(null, null);
+	@PostMapping("/{id}/like/{userId}")
+	public void like(@PathVariable String id, @PathVariable String userId) {
+		service.like(id, userId);
 	}
 
-	public void unlike() {
-		service.unlike(null, null);
+	@DeleteMapping("/{id}/like/{userId}")
+	public void unlike(@PathVariable String id, @PathVariable String userId) {
+		service.unlike(id, userId);
 	}
 
-	public RecipeComment addComment() {
-		return service.addComment(null, null);
+	@PostMapping("/{id}/comment")
+	public RecipeComment addComment(@PathVariable String id, @RequestBody RecipeComment comment) {
+		return service.addComment(id, comment);
 	}
 
-	public void updateComment() {
-		service.updateComment(null, null, null);
+	@PutMapping("/{id}/comment/{commentId}")
+	public void updateComment(@PathVariable String id, @PathVariable String commentId, @RequestBody RecipeComment comment) {
+		service.updateComment(id, commentId, comment);
 	}
 
-	public void deleteComment() {
-		service.deleteComment(null, null);
+	@DeleteMapping("/{id}/comment/{commentId}")
+	public void deleteComment(@PathVariable String id, @PathVariable String commentId) {
+		service.deleteComment(id, commentId);
 	}
 
 }

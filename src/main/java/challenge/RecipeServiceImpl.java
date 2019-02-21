@@ -1,29 +1,34 @@
 package challenge;
 
 import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class RecipeServiceImpl implements RecipeService {
 
+	@Autowired
+	private RecipeRepository repository;
+
 	@Override
 	public Recipe save(Recipe recipe) {
-		return null;
+		return repository.insert(recipe);
 	}
 
 	@Override
 	public void update(String id, Recipe recipe) {
-
+		repository.save(recipe);
 	}
 
 	@Override
 	public void delete(String id) {
-
+		repository.deleteById(id);
 	}
 
 	@Override
 	public Recipe get(String id) {
-		return null;
+		return repository.findById(id).get();
 	}
 
 	@Override

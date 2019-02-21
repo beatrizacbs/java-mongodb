@@ -11,6 +11,8 @@ public class RecipeServiceImpl implements RecipeService {
 
 	@Autowired
 	private RecipeRepository repository;
+	@Autowired
+	private RecipeCommentRepository commentRepository;
 
 	@Override
 	public Recipe save(Recipe recipe) {
@@ -44,7 +46,7 @@ public class RecipeServiceImpl implements RecipeService {
 
 	@Override
 	public void like(String id, String userId) {
-		Recipe recipe = get(id);
+		Recipe recipe = repository.findById(id).get();
 		if(recipe.getLikes() != null){
 			recipe.getLikes().add(userId);
 		}else{
@@ -56,17 +58,28 @@ public class RecipeServiceImpl implements RecipeService {
 
 	@Override
 	public void unlike(String id, String userId) {
-		Recipe recipe = get(id);
-
+		Recipe recipe = repository.findById(id).get();
+		if(recipe.getLikes() != null && !recipe.getLikes().isEmpty()){
+			recipe.getLikes().remove(userId);
+		}
+		repository.save(recipe);
 	}
 
 	@Override
 	public RecipeComment addComment(String id, RecipeComment comment) {
-		return null;
+		RecipeComment savedComment = commentRepository.save(comment);
+		Recipe recipe = repository.findById(id).get();
+		if(recipe.getComments() == null){
+			recipe.setComments(new ArrayList<>());
+		}
+		recipe.getComments().add(savedComment);
+		repository.save(recipe);
+		return savedComment;
 	}
 
 	@Override
-	public void updateComment(String id, String commentId, RecipeComment comment) {
+	public void updateComment(String id, String commentId,
+							  RecipeComment comment) {
 
 	}
 

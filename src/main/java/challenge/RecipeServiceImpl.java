@@ -1,5 +1,6 @@
 package challenge;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,11 +44,19 @@ public class RecipeServiceImpl implements RecipeService {
 
 	@Override
 	public void like(String id, String userId) {
-
+		Recipe recipe = get(id);
+		if(recipe.getLikes() != null){
+			recipe.getLikes().add(userId);
+		}else{
+			recipe.setLikes(new ArrayList<>());
+			recipe.getLikes().add(userId);
+		}
+		repository.save(recipe);
 	}
 
 	@Override
 	public void unlike(String id, String userId) {
+		Recipe recipe = get(id);
 
 	}
 
